@@ -13,18 +13,14 @@ def compute_summary(df: pd.DataFrame) -> dict:
     df["tag_slug"] = df["topicTags"].apply(lambda tags: [t["slug"] for t in tags or []])
     exp = df.explode("tag_slug")
     tag_summary = (
-        (
-            exp.groupby("tag_slug")
-            .agg(
-                total_sub=("titleSlug", "count"),
-                unique_questions=("titleSlug", "nunique"),
-            )
-            .reset_index()
-            .sort_values("total_sub", ascending=False, ignore_index=True)
+        exp.groupby("tag_slug")
+        .agg(
+            total_sub=("titleSlug", "count"),
+            unique_questions=("titleSlug", "nunique"),
         )
-        .head(10)
-        .to_dict(orient="records")
-    )
+        .reset_index()
+        .sort_values("total_sub", ascending=False, ignore_index=True)
+    ).to_dict(orient="records")
 
     dfs = df.sort_values(by=["titleSlug", "timestamp"], ascending=True)
     fatt = dfs.groupby("titleSlug").first().reset_index()

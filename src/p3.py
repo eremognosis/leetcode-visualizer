@@ -36,26 +36,26 @@ def runtime_mem(df: pd.DataFrame):
 
     diff_g = vdf.groupby("difficulty").agg(
         sample_count=("runtime_ms", "count"),
-            runtime_mean=("runtime_ms", "mean"),
-            runtime_median=("runtime_ms", "median"),
-            runtime_std=("runtime_ms", "std"),
-            runtime_min=("runtime_ms", "min"),
-            runtime_max=("runtime_ms", "max"),
-            memory_mean=("memory_mb", "mean"),
-            memory_median=("memory_mb", "median"),
-            memory_std=("memory_mb", "std"),
-            memory_min=("memory_mb", "min"),
-            memory_max=("memory_mb", "max"),
+        runtime_mean=("runtime_ms", "mean"),
+        runtime_median=("runtime_ms", "median"),
+        runtime_std=("runtime_ms", "std"),
+        runtime_min=("runtime_ms", "min"),
+        runtime_max=("runtime_ms", "max"),
+        memory_mean=("memory_mb", "mean"),
+        memory_median=("memory_mb", "median"),
+        memory_std=("memory_mb", "std"),
+        memory_min=("memory_mb", "min"),
+        memory_max=("memory_mb", "max"),
     )
 
-    diffs = (diff_g.fillna(0.0).to_dict(orient="index"))
+    diffs = diff_g.fillna(0.0).to_dict(orient="index")
 
     return {
-        "corr" : {
-            "pearson" : float(pearson_corr) if pd.notna(pearson_corr) else 0.0,
-            "spearman" : float(spearman_corr) if pd.notna(spearman_corr) else 0.0,
-            "sample_size" : len(vdf)
+        "corr": {
+            "pearson": float(pearson_corr) if pd.notna(pearson_corr) else 0.0,
+            "spearman": float(spearman_corr) if pd.notna(spearman_corr) else 0.0,
+            "sample_size": len(vdf),
         },
-        "diff_b" : diffs,
-        # "scatter_pt" : scd
+        "diff_b": diffs,
+        "scatter_pt": scd,
     }
