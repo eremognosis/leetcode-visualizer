@@ -27,6 +27,10 @@
       </form>
     </section>
 
+    <nav class="section-nav" aria-label="Analysis sections">
+      <a href="#summary">Summary</a><a href="#time">Time</a><a href="#transitions">Transitions</a><a href="#performance">Performance</a><a href="#topics">Topics</a><a href="#models">Models</a>
+    </nav>
+
     {% set summary = analysis.summary %}
     {% set acceptance = summary.acceptance %}
     <section class="metric-grid">
@@ -36,7 +40,7 @@
       <div class="metric"><span>Active days</span><strong>{{ analysis.timing.summary.total_active if analysis.timing.summary else 0 }}</strong></div>
     </section>
 
-    <section class="section">
+    <section class="section" id="summary">
       <div class="section-heading"><div><p class="eyebrow">01 / Summary</p><h2>What you solve</h2></div></div>
       <div class="card-grid three">{% for level in ["EASY", "MEDIUM", "HARD"] %}<div class="difficulty-card"><span>{{ level }}</span><strong>{{ summary.difficulty_ques.get(level, 0) }}</strong><small>{{ summary.difficulty_sub.get(level, 0) }} submissions</small></div>{% endfor %}</div>
       <div class="chart-grid two"><div class="panel chart-panel"><h3>Submissions by difficulty</h3><canvas id="difficultyChart"></canvas></div><div class="panel chart-panel"><h3>Verdict mix</h3><canvas id="statusChart"></canvas></div></div>
@@ -46,18 +50,18 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="time">
       <div class="section-heading"><div><p class="eyebrow">02 / Time</p><h2>When you work</h2></div></div>
       <div class="chart-grid two"><div class="panel chart-panel"><h3>Submissions by hour</h3><canvas id="hourChart"></canvas></div><div class="panel chart-panel"><h3>Submissions by weekday</h3><canvas id="dayChart"></canvas></div></div>
       <div class="table-grid two"><div class="panel table-panel"><h3>Activity summary</h3><table><tbody>{% for label, value in analysis.timing.summary.items() %}<tr><th>{{ label|replace('_', ' ')|title }}</th><td>{{ value }}</td></tr>{% endfor %}</tbody></table></div><div class="panel table-panel"><h3>Peak activity</h3><table><tbody>{% for label, value in analysis.timing.peaks.items() %}<tr><th>{{ label|title }}</th><td>{{ value }}</td></tr>{% endfor %}</tbody></table></div></div>
     </section>
 
-    <section class="section">
+    <section class="section" id="transitions">
       <div class="section-heading"><div><p class="eyebrow">03 / Verdict transitions</p><h2>Markov matrix</h2></div></div>
-      <div class="panel table-panel matrix-wrap"><table class="matrix"><thead><tr><th>From / To</th>{% for column in visuals.markov['columns'] %}<th>{{ column }}</th>{% endfor %}</tr></thead><tbody>{% for row in visuals.markov['rows'] %}<tr><th>{{ row.label }}</th>{% for value in row['values'] %}<td>{{ value|round(1) }}%</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+      <div class="panel table-panel matrix-wrap"><table class="matrix"><thead><tr><th>From / To</th>{% for column in visuals.markov['columns'] %}<th>{{ column }}</th>{% endfor %}</tr></thead><tbody>{% for row in visuals.markov['rows'] %}<tr><th>{{ row.label }}</th>{% for value in row['values'] %}<td style="--heat: {{ (value / 100)|round(3) }}">{{ value|round(1) }}%</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
     </section>
 
-    <section class="section">
+    <section class="section" id="performance">
       <div class="section-heading"><div><p class="eyebrow">04 / Performance</p><h2>Efficiency and learning dynamics</h2></div></div>
       <div class="chart-grid two"><div class="panel chart-panel"><h3>Runtime by difficulty</h3><canvas id="runtimeChart"></canvas></div><div class="panel chart-panel"><h3>Time to accepted solution</h3><canvas id="survivalChart"></canvas></div></div>
       <div class="table-grid two">
@@ -67,13 +71,13 @@
       <details class="panel disclosure"><summary>Runtime and memory outliers <span>{{ analysis.advanced.performance.outliers|length }} records</span></summary><div class="table-panel"><table><thead><tr><th>Problem</th><th>Submission ID</th><th>Metric</th><th>Value</th><th>Median</th><th>Z-score</th></tr></thead><tbody>{% for row in analysis.advanced.performance.outliers %}<tr><td>{{ row.titleSlug }}</td><td>{{ row.id }}</td><td>{{ row.metric }}</td><td>{{ row.value|round(2) }}</td><td>{{ row.median|round(2) }}</td><td>{{ row.z_score|round(2) }}</td></tr>{% endfor %}</tbody></table></div></details>
     </section>
 
-    <section class="section">
+    <section class="section" id="topics">
       <div class="section-heading"><div><p class="eyebrow">05 / Topics</p><h2>Tag network</h2></div></div>
       <div class="table-grid two"><div class="panel table-panel"><h3>Most frequent tags</h3><table><thead><tr><th>Tag</th><th>Questions</th></tr></thead><tbody>{% for tag in analysis.advanced.cooccurrence.tags|sort(attribute='question_count', reverse=true) %}<tr><td>{{ tag.tag }}</td><td>{{ tag.question_count }}</td></tr>{% endfor %}</tbody></table></div><div class="panel table-panel"><h3>Detected communities</h3><div class="community-list">{% for community in analysis.advanced.cooccurrence.communities %}<div class="community"><strong>Cluster {{ loop.index }}</strong><span>{% for tag in community %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}</span></div>{% endfor %}</div></div></div>
 +      <details class="panel disclosure"><summary>Full tag co-occurrence matrix <span>{{ analysis.advanced.cooccurrence.matrix|length }} tags</span></summary><div class="table-panel matrix-wrap"><table class="matrix"><thead><tr><th>Tag</th>{% for column in analysis.advanced.cooccurrence.matrix.keys() %}<th>{{ column }}</th>{% endfor %}</tr></thead><tbody>{% for label, row in analysis.advanced.cooccurrence.matrix.items() %}<tr><th>{{ label }}</th>{% for column in analysis.advanced.cooccurrence.matrix.keys() %}<td>{{ row.get(column, 0) }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div></details>
 +    </section>
 
-    <section class="section last-section">
+    <section class="section last-section" id="models">
       <div class="section-heading"><div><p class="eyebrow">06 / Models</p><h2>Behavior and ability</h2></div></div>
       <div class="card-grid three"><div class="metric"><span>IRT ability</span><strong>{{ analysis.advanced.irt.ability|round(3) }}</strong></div><div class="metric"><span>Longest active streak</span><strong>{{ analysis.advanced.habits.streaks[0] if analysis.advanced.habits.streaks else 0 }} days</strong></div><div class="metric"><span>Session count</span><strong>{{ analysis.advanced.habits.sessions[0].session_count if analysis.advanced.habits.sessions else 0 }}</strong></div></div>
       <div class="table-grid two"><div class="panel table-panel"><h3>Habit model</h3><table><tbody>{% for label, value in analysis.advanced.habits.decay.items() %}<tr><th>{{ label|replace('_', ' ')|title }}</th><td>{{ value|round(4) if value is number else value }}</td></tr>{% endfor %}</tbody></table></div><div class="panel table-panel"><h3>IRT problem difficulty</h3><table><thead><tr><th>Problem</th><th>Difficulty</th></tr></thead><tbody>{% for label, value in analysis.advanced.irt.problem_difficulty.items()|sort(attribute='1', reverse=true) %}<tr><td>{{ label }}</td><td>{{ value|round(3) }}</td></tr>{% endfor %}</tbody></table></div></div>

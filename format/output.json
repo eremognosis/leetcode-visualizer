@@ -1,0 +1,57 @@
+{
+    "summary": {
+        "count": 0,
+        "runtime": {},
+        "memory": {},
+        "difficulty_sub": {},
+        "difficulty_ques": {},
+        "lang_sub": {},
+        "lang_ques": {},
+        "tags": [],
+        "acceptance": {
+            "overall_rate": 0.0,
+            "easy_rate": 0.0,
+            "med_rate": 0.0,
+            "hard_rate": 0.0,
+            "first_attempt": 0.0
+        }
+    },
+    "timing": {
+        "summary": {},
+        "hourwise": {},
+        "daywise": {},
+        "peaks": {}
+    },
+    "markov": {},
+    "runtime_memory": {},
+    "advanced": {
+        "cooccurrence": {
+            "tags": [],
+            "matrix": {},
+            "communities": []
+        },
+        "survival": {
+            "observations": [],
+            "kaplan_meier": [],
+            "median_time_seconds": null
+        },
+        "cox_model": {
+            "coefficients": {},
+            "sample_size": 0
+        },
+        "performance": {
+            "outliers": [],
+            "language_benchmark": {}
+        },
+        "habits": {
+            "sessions": [],
+            "streaks": [],
+            "decay": {}
+        },
+        "irt": {
+            "ability": 0.0,
+            "problem_difficulty": {},
+            "sample_size": 0
+        }
+    }
+}

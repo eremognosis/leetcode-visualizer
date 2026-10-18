@@ -1,0 +1,22 @@
+[
+  {
+    "id": "2174602487",
+    "title": "Weighted Sum of a Tree",
+    "titleSlug": "weighted-sum-of-a-tree",
+    "statusDisplay": "Accepted",
+    "lang": "cpp",
+    "runtime": "154 ms",
+    "timestamp": "1792245086",
+    "memory": "242.2 MB"
+  },
+  {
+    "id": "2174601947",
+    "title": "Weighted Sum of a Tree",
+    "titleSlug": "weighted-sum-of-a-tree",
+    "statusDisplay": "Runtime Error",
+    "lang": "cpp",
+    "runtime": "N/A",
+    "timestamp": "1792245038",
+    "memory": "N/A"
+  }
+]

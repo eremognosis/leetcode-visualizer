@@ -230,7 +230,7 @@ def performance_analysis(df: pd.DataFrame) -> dict:
         benchmark = {}
     else:
         valid["difficulty_score"] = (
-            valid["difficulty"].map({"EASY": 1, "MEDIUM": 2, "HARD": 3}).fillna(2)
+            valid["difficulty"].map({"EASY": 1, "MEDIUM": 2, "HARD": 5}).fillna(2)
         )
         valid["log_runtime"] = np.log1p(valid["runtime_ms"])
         design = pd.get_dummies(
