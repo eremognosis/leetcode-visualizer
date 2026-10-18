@@ -28,7 +28,7 @@ def combine_analyses(df: pd.DataFrame) -> dict:
     if df.empty:
         return {
             "summary": compute_summary(df),
-            "timing": {},
+            "timing": submission_timing(df),
             "markov": {},
             "runtime_memory": {},
             "advanced": advanced_analytics(df),

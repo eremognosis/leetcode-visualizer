@@ -2,9 +2,31 @@ import pandas as pd
 import numpy as np
 
 
+def _acceptance_rate(df: pd.DataFrame) -> float:
+    if df.empty:
+        return 0.0
+    return float(100.0 * df["statusDisplay"].eq("Accepted").sum() / len(df))
+
+
 def compute_summary(df: pd.DataFrame) -> dict:
     if df.empty:
-        return {"count": 0, "runtime": {}, "memory": {}}
+        return {
+            "count": 0,
+            "runtime": {},
+            "memory": {},
+            "difficulty_sub": {},
+            "difficulty_ques": {},
+            "lang_sub": {},
+            "lang_ques": {},
+            "tags": [],
+            "acceptance": {
+                "overall_rate": 0.0,
+                "easy_rate": 0.0,
+                "med_rate": 0.0,
+                "hard_rate": 0.0,
+                "first_attempt": 0.0,
+            },
+        }
     diff_sub_cnt = df["difficulty"].value_counts().to_dict()
     diff_ques_cnt = df.groupby("difficulty")["titleSlug"].nunique().to_dict()
 
@@ -56,39 +78,10 @@ def compute_summary(df: pd.DataFrame) -> dict:
         "lang_ques": lang_ques_cnt,
         "tags": tag_summary,
         "acceptance": {
-            "overall_rate": float(
-                100.0 * len(df[df["statusDisplay"] == "Accepted"]) / len(df)
-            ),
-            "easy_rate": float(
-                100.0
-                * len(
-                    df[
-                        (df["statusDisplay"] == "Accepted")
-                        & (df["difficulty"] == "EASY")
-                    ]
-                )
-                / len(df[df["difficulty"] == "EASY"])
-            ),
-            "med_rate": float(
-                100.0
-                * len(
-                    df[
-                        (df["statusDisplay"] == "Accepted")
-                        & (df["difficulty"] == "MEDIUM")
-                    ]
-                )
-                / len(df[df["difficulty"] == "MEDIUM"])
-            ),
-            "hard_rate": float(
-                100.0
-                * len(
-                    df[
-                        (df["statusDisplay"] == "Accepted")
-                        & (df["difficulty"] == "HARD")
-                    ]
-                )
-                / len(df[df["difficulty"] == "HARD"])
-            ),
+            "overall_rate": _acceptance_rate(df),
+            "easy_rate": _acceptance_rate(df[df["difficulty"] == "EASY"]),
+            "med_rate": _acceptance_rate(df[df["difficulty"] == "MEDIUM"]),
+            "hard_rate": _acceptance_rate(df[df["difficulty"] == "HARD"]),
             "first_attempt": float(facc_rate),
         },  # for now lets assume div by zero wont occur
     }
@@ -96,7 +89,7 @@ def compute_summary(df: pd.DataFrame) -> dict:
 
 def submission_timing(df: pd.DataFrame) -> dict:
     if df.empty:
-        return {}
+        return {"summary": {}, "hourwise": {}, "daywise": {}, "peaks": {}}
     # df["timestamp"] of datetime()
 
     df = df.sort_values("timestamp")

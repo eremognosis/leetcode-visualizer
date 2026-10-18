@@ -16,7 +16,7 @@ def filter_dataset(
     if from_date:
         fdf = fdf[fdf["timestamp"] >= from_date]
     if to_date:
-        df = fdf[fdf["timestamp"] <= to_date]
+        fdf = fdf[fdf["timestamp"] <= to_date]
     if languages:
         fdf = fdf[fdf["lang"].isin(languages)]
     if status:
